@@ -1,4 +1,4 @@
-name: CICICPipeline
+name: Pipeline
 on: [push]
 
 jobs:

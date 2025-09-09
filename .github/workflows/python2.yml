@@ -17,9 +17,18 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
-
-      - name: Create an artifact
-        uses: actions/upload-artifact@v4
-        with:
-           name: myartifact
-           path: myartifact/artifact.txt
+      
+      - name: Create an artifact folder
+        run: mkdir myartifact
+        
+      - name: Save artifact to repo
+        run: |
+          echo " this is my artifact"> artifact.txt
+          mv artifact.txt myartifact/
+          cd myartifact
+          git config --global user.email "jain11.pallavi@gmail.com"
+          git config --global user.name "jain11-pallavi"
+          git add .
+          git commit -m "adding artifact"
+          git push origin master
+          echo "Artifact saved to repository"

@@ -18,17 +18,46 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
       
-      - name: Create an artifact folder
-        run: mkdir myartifact
-        
-      - name: Save artifact to repo
+       - name: Create artifact directories
         run: |
-          echo " this is my artifact"> artifact.txt
-          mv artifact.txt myartifact/
-          cd myartifact
-          git config --local user.email "jain11.pallavi@gmail.com"
-          git config --local user.name "jain11-pallavi"
-          git add .
-          git commit -m "adding artifact"
-          git push origin master
-          echo "Artifact saved to repository"
+          mkdir -p artifacts/build
+         # mkdir -p artifacts/test-results
+         #  mkdir -p artifacts/reports
+      
+     - name: Generate build artifacts
+        run: |
+          echo "Build timestamp: $(date)" > artifacts/build/build-info.txt
+          echo "This is my build artifact" > artifacts/build/artifact.txt
+          echo "Build completed successfully" > artifacts/build/build-log.txt
+      
+      #- name: Generate test results
+       # run: |
+       #   echo "Test execution results" > artifacts/test-results/test-report.txt
+       #   echo "All tests passed: $(date)" > artifacts/test-results/test-summary.txt
+          
+      #- name: Generate reports
+       # run: |
+       #  echo "Pipeline execution report" > artifacts/reports/pipeline-report.txt
+       #   echo "Build number: ${{ github.run_number }}" >> artifacts/reports/pipeline-report.txt
+       #   echo "Commit SHA: ${{ github.sha }}" >> artifacts/reports/pipeline-report.txt
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts-${{ github.run_number }}
+          path: artifacts/build/
+          retention-days: 30
+          
+      #- name: Upload test results
+      #  uses: actions/upload-artifact@v3
+        #with:
+       #   name: test-results-${{ github.run_number }}
+        #  path: artifacts/test-results/
+       #   retention-days: 7
+          
+      #- name: Upload reports
+     #   uses: actions/upload-artifact@v3
+      #  with:
+       #   name: pipeline-reports-${{ github.run_number }}
+       #   path: artifacts/reports/
+        #  retention-days: 90
